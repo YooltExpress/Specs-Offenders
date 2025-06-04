@@ -1,18 +1,15 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+  iconUrl: require('leaflet/dist/images/marker-icon.png').default,
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png').default,
 });
 
 interface MapProps {
@@ -21,27 +18,24 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center, zoom }) => {
-  // Use a state to generate a unique key for the MapContainer
-  const [mapKey, setMapKey] = useState(Date.now());
-  
-  // Clean up the map instance when component unmounts
-  useEffect(() => {
-    return () => {
-      // This will help clean up any map instances when the component unmounts
-      const mapElements = document.querySelectorAll('.leaflet-container');
-      mapElements.forEach(el => {
-        // @ts-ignore - accessing private property
-        if (el._leaflet_id) {
-          // @ts-ignore - accessing private property
-          delete el._leaflet_id;
-        }
-      });
-    };
-  }, []);
+  const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(null);
+
+  function LocationPin() {
+    useMapEvents({
+      click(e) {
+        setClickedPosition([e.latlng.lat, e.latlng.lng]);
+      },
+    });
+
+    return clickedPosition ? (
+      <Pin position={clickedPosition}>
+        <Popup>You clicked here: <br /> Lat: {clickedPosition[0].toFixed(4)}, Lng: {clickedPosition[1].toFixed(4)}</Popup>
+      </Pin>
+    ) : null;
+  }
 
   return (
     <MapContainer
-      key={mapKey}
       center={center}
       zoom={zoom}
       scrollWheelZoom={true}
@@ -51,12 +45,9 @@ const Map: React.FC<MapProps> = ({ center, zoom }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* Example Marker */}
-      <Marker position={center}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+
+      {/* LocationPin component/handler here */}
+      <LocationPin />
     </MapContainer>
   );
 };
