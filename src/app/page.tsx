@@ -9,9 +9,9 @@ const App: React.FC = () => {
     <div style={{ textAlign: 'center', padding: '20px' }}>
       <h1>My OpenStreetMap Application</h1>
       <p>Displaying Salt Lake City using OpenStreetMap data.</p>
-      <MapComponent center={initialCenter} zoom={initialZoom} />
+      <Map center={initialCenter} zoom={initialZoom} />
     </div>
   );
 };
 
-export default page;
+export default App;
