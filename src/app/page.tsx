@@ -15,10 +15,10 @@ const App: React.FC = () => {
   const initialZoom: number = 13;
 
   return (
-  <div style={{ display: "flex", flexDirection: "row-reverse", height: "100vh", width: "100vw", textAlign: "center" }}>
-    <SidePanel />
-    <div style={{ flex: 1 }}>
-      <Map center={initialCenter} zoom={initialZoom} />
+  <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <Map center={initialCenter} zoom={initialZoom} />
+    <div style={{ position: "absolute", top: 0, right: 0, height: "100vh", zIndex: 1000 }}>
+      <SidePanel />
     </div>
   </div>
 );
