@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react';
+import GetInfo from './getinfo';
 
 const SidePanel: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ const SidePanel: React.FC = () => {
     borderRadius: "10px"
 }}>
       <h2>Side Panel</h2>
-      <p>Put your content here.</p>
+      <p><GetInfo/></p>
     </div>
   );
 };
