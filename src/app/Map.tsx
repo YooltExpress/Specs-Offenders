@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -21,8 +21,27 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center, zoom }) => {
+  // Use a state to generate a unique key for the MapContainer
+  const [mapKey, setMapKey] = useState(Date.now());
+  
+  // Clean up the map instance when component unmounts
+  useEffect(() => {
+    return () => {
+      // This will help clean up any map instances when the component unmounts
+      const mapElements = document.querySelectorAll('.leaflet-container');
+      mapElements.forEach(el => {
+        // @ts-ignore - accessing private property
+        if (el._leaflet_id) {
+          // @ts-ignore - accessing private property
+          delete el._leaflet_id;
+        }
+      });
+    };
+  }, []);
+
   return (
     <MapContainer
+      key={mapKey}
       center={center}
       zoom={zoom}
       scrollWheelZoom={true}
