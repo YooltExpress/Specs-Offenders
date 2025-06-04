@@ -6,7 +6,7 @@ const App: React.FC = () => {
   const initialZoom: number = 13;
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
+    <div style={{ textAlign: 'center' }}>
       <Map center={initialCenter} zoom={initialZoom} />
     </div>
   );
