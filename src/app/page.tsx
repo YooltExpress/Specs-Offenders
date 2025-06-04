@@ -14,10 +14,10 @@ const App: React.FC = () => {
   const initialZoom: number = 13;
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <Map center={initialCenter} zoom={initialZoom} />
-    </div>
-  );
+  <div style={{ height: "100vh", width: "100vw", textAlign: "center" }}>
+    <Map center={initialCenter} zoom={initialZoom} />
+  </div>
+);
 };
 
 export default App;
