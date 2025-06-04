@@ -2,6 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import SidePanel from './sidepanel';
 
 // Dynamically import the Map component with ssr disabled
 const Map = dynamic(() => import('./Map'), {
@@ -14,8 +15,11 @@ const App: React.FC = () => {
   const initialZoom: number = 13;
 
   return (
-  <div style={{ height: "100vh", width: "100vw", textAlign: "center" }}>
-    <Map center={initialCenter} zoom={initialZoom} />
+  <div style={{ display: "flex", flexDirection: "row-reverse", height: "100vh", width: "100vw", textAlign: "center" }}>
+    <SidePanel />
+    <div style={{ flex: 1 }}>
+      <Map center={initialCenter} zoom={initialZoom} />
+    </div>
   </div>
 );
 };
