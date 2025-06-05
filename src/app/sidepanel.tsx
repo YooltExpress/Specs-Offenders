@@ -20,7 +20,7 @@ const SidePanel: React.FC = () => {
     borderRadius: "10px"
 }}>
       <h2>Side Panel</h2>
-      <p><GetInfo/></p>
+      <GetInfo/>
     </div>
   );
 };
