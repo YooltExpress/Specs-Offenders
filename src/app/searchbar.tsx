@@ -22,28 +22,32 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="search-bar-container" style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column' }}>
+      <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'row' }}>
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="Enter a location here..."
           style={{
+            flex: 1,
             padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '5px',
+            marginBottom: 0,
+            borderRadius: '5px 0 0 5px',
             border: '1px solid #ccc',
+            background: '#fff',
+            borderRight: 'none'
           }}
         />
         <button
           type="submit"
           style={{
-            padding: '10px',
+            padding: '10px 20px',
             backgroundColor: '#4CAF50',
             color: 'white',
-            border: 'none',
-            borderRadius: '5px',
+            border: '1px solid #4CAF50',
+            borderRadius: '0 5px 5px 0',
             cursor: 'pointer',
+            marginLeft: 0
           }}
         >
           Search
