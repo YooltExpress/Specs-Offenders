@@ -69,11 +69,11 @@ function DropPin() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {/* Example Marker */}
-      <Marker position={center}>
+      {/* <Marker position={center}>
     <Popup>
       A pretty CSS3 popup. <br /> Easily customizable.
     </Popup>
-    </Marker>
+    </Marker> */}
     <DropPin />
     </MapContainer>
   );
