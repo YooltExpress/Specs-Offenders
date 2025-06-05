@@ -10,9 +10,7 @@ import axios from 'axios';
 defineBackend({
   auth,
   data,
-});import { APIGatewayEvent, Context, Callback } from 'aws-lambda';
-import axios from 'axios';
-
+});
 // Define the structure of the body
 interface RequestBody {
   address: string;
