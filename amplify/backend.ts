@@ -49,16 +49,29 @@ export const lambdaHandler = async (event: APIGatewayEvent, context: Context, ca
                 n8nResponse: response.data  // Include the response from n8n
             })
         };
-    } catch (error) {
-        console.error('Error sending data to n8n:', error);
+    } catch (error: unknown) {
+        // Ensure the error is typed as an Error
+        if (error instanceof Error) {
+            console.error('Error sending data to n8n:', error.message);
 
-        // Return an error response if the request fails
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: 'Failed to trigger webhook',
-                error: error.message
-            })
-        };
+            // Return an error response if the request fails
+            return {
+                statusCode: 500,
+                body: JSON.stringify({
+                    message: 'Failed to trigger webhook',
+                    error: error.message // Access the message property on Error
+                })
+            };
+        } else {
+            // Handle the case where the error is not an instance of Error
+            console.error('Unknown error:', error);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({
+                    message: 'Failed to trigger webhook',
+                    error: 'Unknown error occurred'
+                })
+            };
+        }
     }
 };
