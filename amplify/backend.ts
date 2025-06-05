@@ -10,13 +10,23 @@ import axios from 'axios';
 defineBackend({
   auth,
   data,
-});
+});import { APIGatewayEvent, Context, Callback } from 'aws-lambda';
+import axios from 'axios';
+
+// Define the structure of the body
+interface RequestBody {
+  address: string;
+  time_stamp: string;
+}
 
 export const lambdaHandler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
+    // Parse the body into an object
+    const body: RequestBody = JSON.parse(event.body || '{}');  // Make sure to handle cases where the body might be empty or malformed
+
     // Data to send to n8n
     const data = {
-        address: event.body?.address,  // Accessing address from event body
-        time_stamp: event.body?.time_stamp  // Accessing time_stamp from event body
+        address: body.address,  // Accessing address from parsed body
+        time_stamp: body.time_stamp  // Accessing time_stamp from parsed body
     };
 
     // Define the URL for the webhook endpoint (n8n webhook URL)
