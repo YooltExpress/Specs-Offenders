@@ -21,7 +21,7 @@ const SidePanel: React.FC = () => {
     zIndex: 1000,
     borderRadius: "10px"
 }}>
-      <h2>Side Panel</h2>
+      
       <GetInfo/>
         
     <div style={{ marginTop: '2rem' }}>

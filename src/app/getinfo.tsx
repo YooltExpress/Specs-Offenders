@@ -3,7 +3,7 @@
 import React from 'react';
 
 const GetInfo: React.FC = () => {
-    return (<div> Hello World</div>)
+    return (<div> Information regarding PM2.5</div>)
 };
 //we give address,
 // dante gives back coordinates and info which we display
