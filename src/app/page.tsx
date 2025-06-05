@@ -16,6 +16,9 @@ const App: React.FC = () => {
 
   return (
   <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div>
+      <searchbar />
+    </div>
     <Map center={initialCenter} zoom={initialZoom} />
     <div style={{ position: "absolute", top: 0, right: 0, height: "100vh", zIndex: 1000 }}>
       <SidePanel />
