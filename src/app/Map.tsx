@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
@@ -21,30 +21,63 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center, zoom }) => {
-  // Use a state to generate a unique key for the MapContainer
   const [mapKey, setMapKey] = useState(Date.now());
   const [pinPosition, setPinPosition] = useState<[number, number] | null>(null);
-function DropPin() {
-  useMapEvents({
-    click(e) {
-      setPinPosition([e.latlng.lat, e.latlng.lng]);
-    },
-  });
+  const [locationName, setLocationName] = useState<string>('New York'); // Default location name
 
-  return pinPosition ? (
-    <Marker position={pinPosition}>
-      <Popup>
-        Dropped Pin<br />
-        Lat: {pinPosition[0].toFixed(4)}, Lng: {pinPosition[1].toFixed(4)}
-      </Popup>
-    </Marker>
-  ) : null;
+  // Function to drop a pin at a given location
+  const dropPinAtLocation = (location: string) => {
+    // Geocode the location name into lat/lng using Nominatim API
+    fetch(`https://nominatim.openstreetmap.org/search?q=${location}&format=json&limit=1`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lng = parseFloat(data[0].lon);
+          setPinPosition([lat, lng]); // Set the pin's position
+        } else {
+          alert('Location not found!');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching geolocation:', error);
+      });
+  };
+
+  // Custom component to handle map events
+  function DropPin() {
+    const map = useMap();
+
+    useEffect(() => {
+      // Drop a pin at the default location (e.g., "New York")
+      dropPinAtLocation(locationName);
+
+      // Optionally, if you want to add behavior for user clicks
+      const onClickHandler = (e: any) => {
+        const { lat, lng } = e.latlng;
+        setPinPosition([lat, lng]); // Drop pin where the user clicks
+      };
+
+      map.on('click', onClickHandler);
+
+      return () => {
+        map.off('click', onClickHandler); // Clean up the event listener
+      };
+    }, [map, locationName]);
+
+    return pinPosition ? (
+      <Marker position={pinPosition}>
+        <Popup>
+          Dropped Pin<br />
+          Lat: {pinPosition[0].toFixed(4)}, Lng: {pinPosition[1].toFixed(4)}
+        </Popup>
+      </Marker>
+    ) : null;
   }
-  
+
   // Clean up the map instance when component unmounts
   useEffect(() => {
     return () => {
-      // This will help clean up any map instances when the component unmounts
       const mapElements = document.querySelectorAll('.leaflet-container');
       mapElements.forEach(el => {
         // @ts-ignore - accessing private property
@@ -57,25 +90,30 @@ function DropPin() {
   }, []);
 
   return (
-    <MapContainer
-      key={mapKey}
-      center={center}
-      zoom={zoom}
-      scrollWheelZoom={true}
-      style={{ height: '100vh', width: '100vw' }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    <div>
+      {/* Input to enter the location name */}
+      <input
+        type="text"
+        value={locationName}
+        onChange={(e) => setLocationName(e.target.value)}
+        placeholder="Enter a location name"
       />
-      {/* Example Marker */}
-      {/* <Marker position={center}>
-    <Popup>
-      A pretty CSS3 popup. <br /> Easily customizable.
-    </Popup>
-    </Marker> */}
-    <DropPin />
-    </MapContainer>
+      <button onClick={() => dropPinAtLocation(locationName)}>Drop Pin</button>
+
+      <MapContainer
+        key={mapKey}
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom={true}
+        style={{ height: '100vh', width: '100vw' }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <DropPin />
+      </MapContainer>
+    </div>
   );
 };
 
